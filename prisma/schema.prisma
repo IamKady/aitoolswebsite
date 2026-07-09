@@ -1,0 +1,472 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PricingType {
+  FREE
+  FREEMIUM
+  PAID
+  OPEN_SOURCE
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Platform {
+  WEB
+  WINDOWS
+  MAC
+  LINUX
+  ANDROID
+  IOS
+  CHROME_EXTENSION
+  API
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// User
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  avatar    String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favorites    Favorite[]
+  bookmarks    Bookmark[]
+  reviews      Review[]
+  comparisons  Comparison[]
+  submissions  ToolSubmission[]
+  searchLogs   SearchLog[]
+  newsletterSubscriptions NewsletterSubscriber[]
+
+  @@index([clerkId])
+  @@index([email])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Category
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?  // Lucide icon name
+  color       String?  // Hex color for card backgrounds
+  toolCount   Int      @default(0)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tools AITool[]
+
+  @@index([slug])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tag
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  tools AIToolTag[]
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AI Tool
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AITool {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  tagline          String      // Short one-liner
+  description      String      @db.Text
+  logo             String?     // URL
+  website          String
+  pricing          PricingType
+  pricingDetails   String?     // e.g. "Free up to 10k tokens, then $0.002/token"
+  startingPrice    Float?      // Monthly USD
+  hasFreeTrial     Boolean     @default(false)
+  hasApi           Boolean     @default(false)
+  isOpenSource     Boolean     @default(false)
+  githubUrl        String?
+  
+  // Ratings
+  rating           Float       @default(0)
+  reviewCount      Int         @default(0)
+  
+  // Discovery
+  featured         Boolean     @default(false)
+  sponsored        Boolean     @default(false)
+  trending         Boolean     @default(false)
+  verified         Boolean     @default(false)
+  
+  // SEO & Meta
+  metaTitle        String?
+  metaDescription  String?
+  aiSummary        String?     @db.Text
+  
+  // Stats
+  viewCount        Int         @default(0)
+  favoriteCount    Int         @default(0)
+  
+  // Categorization
+  categoryId       String
+  category         Category    @relation(fields: [categoryId], references: [id])
+  
+  platforms        Platform[]
+  
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  // Relations
+  tags             AIToolTag[]
+  screenshots      ToolScreenshot[]
+  features         ToolFeature[]
+  pros             ToolPro[]
+  cons             ToolCon[]
+  pricingPlans     PricingPlan[]
+  integrations     ToolIntegration[]
+  reviews          Review[]
+  favorites        Favorite[]
+  bookmarks        Bookmark[]
+  comparisonsA     Comparison[] @relation("ToolA")
+  comparisonsB     Comparison[] @relation("ToolB")
+  collections      CollectionTool[]
+  alternativesOf   Alternative[] @relation("ToolAlternatives")
+  alternativeTo    Alternative[] @relation("AlternativeTo")
+  workflows        WorkflowStep[]
+  faqs             ToolFAQ[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([pricing])
+  @@index([rating])
+  @@index([featured])
+  @@index([trending])
+  @@index([createdAt])
+}
+
+model AIToolTag {
+  toolId String
+  tagId  String
+  tool   AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([toolId, tagId])
+}
+
+model ToolScreenshot {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  order     Int      @default(0)
+  toolId    String
+  tool      AITool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model ToolFeature {
+  id     String @id @default(cuid())
+  text   String
+  order  Int    @default(0)
+  toolId String
+  tool   AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+model ToolPro {
+  id     String @id @default(cuid())
+  text   String
+  toolId String
+  tool   AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+model ToolCon {
+  id     String @id @default(cuid())
+  text   String
+  toolId String
+  tool   AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+model PricingPlan {
+  id          String   @id @default(cuid())
+  name        String   // Free, Starter, Pro, Enterprise
+  price       Float?   // null = custom/contact
+  period      String?  // month, year
+  description String?
+  features    String[] // List of included features
+  highlighted Boolean  @default(false)
+  toolId      String
+  tool        AITool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+model ToolIntegration {
+  id     String @id @default(cuid())
+  name   String
+  logo   String?
+  url    String?
+  toolId String
+  tool   AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+model ToolFAQ {
+  id       String @id @default(cuid())
+  question String
+  answer   String @db.Text
+  order    Int    @default(0)
+  toolId   String
+  tool     AITool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Review
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Review {
+  id             String       @id @default(cuid())
+  title          String
+  body           String       @db.Text
+  rating         Float        // 1-5
+  easeOfUse      Float?       // 1-5
+  valueForMoney  Float?       // 1-5
+  features       Float?       // 1-5
+  support        Float?       // 1-5
+  pros           String[]
+  cons           String[]
+  status         ReviewStatus @default(PENDING)
+  helpfulCount   Int          @default(0)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  toolId         String
+  tool           AITool       @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([toolId])
+  @@index([userId])
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// User Interactions
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      AITool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, toolId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      AITool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, toolId])
+}
+
+model Comparison {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  toolAId   String
+  toolBId   String
+  toolA     AITool   @relation("ToolA", fields: [toolAId], references: [id])
+  toolB     AITool   @relation("ToolB", fields: [toolBId], references: [id])
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Collections
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Collection {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?  @db.Text
+  emoji       String?
+  cover       String?
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tools CollectionTool[]
+
+  @@index([slug])
+}
+
+model CollectionTool {
+  collectionId String
+  toolId       String
+  order        Int        @default(0)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  tool         AITool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, toolId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Alternatives
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Alternative {
+  toolId        String
+  alternativeId String
+  tool          AITool @relation("ToolAlternatives", fields: [toolId], references: [id], onDelete: Cascade)
+  alternative   AITool @relation("AlternativeTo", fields: [alternativeId], references: [id], onDelete: Cascade)
+
+  @@id([toolId, alternativeId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Blog
+// ─────────────────────────────────────────────────────────────────────────────
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  excerpt         String
+  content         String   @db.Text
+  coverImage      String?
+  category        String   // news, tutorial, review, comparison, guide, roundup
+  tags            String[]
+  author          String
+  authorAvatar    String?
+  metaTitle       String?
+  metaDescription String?
+  published       Boolean  @default(false)
+  featured        Boolean  @default(false)
+  viewCount       Int      @default(0)
+  readingTime     Int?     // minutes
+  publishedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([slug])
+  @@index([published])
+  @@index([category])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Newsletter
+// ─────────────────────────────────────────────────────────────────────────────
+
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  confirmed   Boolean  @default(false)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tool Submissions
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ToolSubmission {
+  id          String           @id @default(cuid())
+  name        String
+  website     String
+  description String           @db.Text
+  category    String
+  pricing     String
+  submitterId String?
+  submitter   User?            @relation(fields: [submitterId], references: [id])
+  email       String
+  status      SubmissionStatus @default(PENDING)
+  notes       String?          // Admin notes
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Workflows
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Workflow {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  emoji       String?
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  steps WorkflowStep[]
+}
+
+model WorkflowStep {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  toolId      String?
+  tool        AITool?  @relation(fields: [toolId], references: [id])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Analytics
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SearchLog {
+  id           String   @id @default(cuid())
+  query        String
+  resultsCount Int      @default(0)
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+
+  @@index([query])
+  @@index([createdAt])
+}
