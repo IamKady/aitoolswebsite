@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import prisma from "@/lib/prisma";
 import { ToolCardData } from "@/types";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "dummy-key-for-build" });
 
 /**
  * Get AI-powered tool recommendations based on user query
