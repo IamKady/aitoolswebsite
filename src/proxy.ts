@@ -1,7 +1,7 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 // In Next.js 16, route protection is handled in server components via auth().protect()
-// The middleware runs on every non-static request to enable Clerk session tracking
+// The proxy runs on every non-static request to enable Clerk session tracking
 export default clerkMiddleware();
 
 export const config = {
