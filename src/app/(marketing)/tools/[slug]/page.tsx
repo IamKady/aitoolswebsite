@@ -153,12 +153,17 @@ export default async function ToolDetailPage({ params }: Props) {
             {/* Hero */}
             <div className="flex items-start gap-4">
               {tool.logo ? (
-                <div className="w-16 h-16 rounded-2xl border border-border overflow-hidden bg-white flex-shrink-0">
+                <div className="w-16 h-16 rounded-2xl border border-border overflow-hidden bg-white flex-shrink-0 flex items-center justify-center">
                   <Image src={tool.logo} alt={tool.name} width={64} height={64} className="w-full h-full object-contain" />
                 </div>
               ) : (
-                <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-8 h-8 text-white" />
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-white text-2xl font-extrabold select-none shadow-sm border border-white/10"
+                  style={{
+                    background: `linear-gradient(135deg, ${tool.category.color || "#6366f1"} 0%, ${tool.category.color || "#6366f1"}bb 100%)`
+                  }}
+                >
+                  {tool.name.charAt(0).toUpperCase()}
                 </div>
               )}
               <div className="flex-1">

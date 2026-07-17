@@ -732,7 +732,7 @@ categories.forEach((cat) => {
       slug,
       tagline: `Next-generation AI-powered solution for ${cat.name.toLowerCase()}`,
       description: `${name} is an advanced AI tool built specifically for ${cat.name.toLowerCase()}. It utilizes cutting-edge machine learning models to help professionals automate workflow loops, enhance output quality, and scale operations seamlessly.\n\nWith features built around efficiency and productivity, it helps teams streamline tasks, save hours of manual effort, and get better results in minutes.`,
-      logo: `https://logo.clearbit.com/${slug.replace("-ai", "")}.com`,
+      logo: null,
       website: `https://${slug}.com`,
       pricing,
       pricingDetails: pricing === "FREE" ? "Free for all users" : pricing === "OPEN_SOURCE" ? "Open source code, self-hostable" : `Pricing starts from $${startingPrice}/mo`,

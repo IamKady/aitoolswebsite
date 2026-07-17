@@ -245,20 +245,24 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
 // Tool logo with fallback
 function ToolLogo({ tool, size }: { tool: ToolCardData; size: "sm" | "lg" }) {
   const sizeClass = size === "lg" ? "w-10 h-10" : "w-8 h-8";
-  const iconSize = size === "lg" ? "w-5 h-5" : "w-4 h-4";
+  const textClass = size === "lg" ? "text-base font-extrabold" : "text-xs font-bold";
   const categoryColor = tool.category.color || "#6366f1";
+  const [imgError, setImgError] = useState(false);
 
-  if (tool.logo) {
+  // Get first letter of tool name
+  const firstLetter = tool.name.charAt(0).toUpperCase();
+
+  if (tool.logo && !imgError) {
     return (
-      <div className={cn("rounded-xl overflow-hidden flex-shrink-0 border border-border bg-white", sizeClass)}>
+      <div className={cn("rounded-xl overflow-hidden flex-shrink-0 border border-border bg-white flex items-center justify-center", sizeClass)}>
         <Image
           src={tool.logo}
           alt={`${tool.name} logo`}
           width={size === "lg" ? 40 : 32}
           height={size === "lg" ? 40 : 32}
           className="w-full h-full object-contain"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
+          onError={() => {
+            setImgError(true);
           }}
         />
       </div>
@@ -268,12 +272,15 @@ function ToolLogo({ tool, size }: { tool: ToolCardData; size: "sm" | "lg" }) {
   return (
     <div
       className={cn(
-        "rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold",
-        sizeClass
+        "rounded-xl flex items-center justify-center flex-shrink-0 text-white shadow-sm border border-white/10 select-none",
+        sizeClass,
+        textClass
       )}
-      style={{ backgroundColor: categoryColor }}
+      style={{
+        background: `linear-gradient(135deg, ${categoryColor} 0%, ${categoryColor}bb 100%)`,
+      }}
     >
-      <Sparkles className={iconSize} />
+      {firstLetter}
     </div>
   );
 }
