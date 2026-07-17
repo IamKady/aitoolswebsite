@@ -30,6 +30,8 @@ async function getToolBySlug(slug: string) {
       pricingPlans: true,
       integrations: true,
       faqs: { orderBy: { order: "asc" } },
+      priceHistory: { orderBy: { recordedAt: "asc" } },
+      releaseNotes: { orderBy: { releasedAt: "desc" } },
       reviews: {
         where: { status: "APPROVED" },
         include: { user: { select: { id: true, name: true, avatar: true } } },
@@ -309,6 +311,88 @@ export default async function ToolDetailPage({ params }: Props) {
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Price History */}
+            {tool.priceHistory && tool.priceHistory.length > 0 && (
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-4">Price History Tracker</h2>
+                <div className="p-5 rounded-xl border border-border bg-card">
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Track the historical pricing of {tool.name}. See when tiers were modified or starting prices changed.
+                  </p>
+                  <div className="space-y-4">
+                    {/* Visual Pricing timeline graph */}
+                    <div className="h-24 flex items-end gap-3 px-2 pt-6 border-b border-border mb-4">
+                      {tool.priceHistory.map((ph: any) => {
+                        const maxPrice = Math.max(...tool.priceHistory.map((p: any) => p.price), 10);
+                        const percent = ph.price === 0 ? 10 : (ph.price / maxPrice) * 100;
+                        return (
+                          <div key={ph.id} className="flex-1 flex flex-col items-center gap-2 group">
+                            <div 
+                              className="w-full rounded-t-md gradient-bg relative transition-all duration-300 group-hover:opacity-80" 
+                              style={{ height: `${percent}%` }}
+                            >
+                              <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground text-[10px] font-semibold px-1.5 py-0.5 rounded shadow border border-border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                {ph.price === 0 ? "Free" : `$${ph.price}`}
+                              </div>
+                            </div>
+                            <span className="text-[10px] text-muted-foreground text-center truncate w-full">
+                              {new Date(ph.recordedAt).toLocaleDateString(undefined, { month: 'short', year: '2-digit' })}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Pricing Log */}
+                    <div className="divide-y divide-border">
+                      {tool.priceHistory.map((ph: any) => (
+                        <div key={ph.id} className="flex justify-between py-2 text-xs">
+                          <span className="text-muted-foreground">
+                            {new Date(ph.recordedAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                          </span>
+                          <span className="font-semibold text-foreground">
+                            {ph.price === 0 ? "Free Access Tier" : `$${ph.price}/mo Starting Price`}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Release Notes */}
+            {tool.releaseNotes && tool.releaseNotes.length > 0 && (
+              <div>
+                <h2 className="text-lg font-bold text-foreground mb-4">Product Release Notes</h2>
+                <div className="space-y-4 relative pl-4 border-l-2 border-border/60">
+                  {tool.releaseNotes.map((rn: any) => (
+                    <div key={rn.id} className="relative group">
+                      {/* Timeline dot */}
+                      <div className="absolute -left-[23px] top-1.5 w-3 h-3 rounded-full bg-border group-hover:bg-primary border-2 border-background transition-colors" />
+                      
+                      <div className="p-4 rounded-xl border border-border bg-card">
+                        <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary font-semibold border border-primary/20">
+                              {rn.version}
+                            </span>
+                            <h3 className="text-sm font-semibold text-foreground">{rn.title}</h3>
+                          </div>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(rn.releasedAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {rn.description}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>

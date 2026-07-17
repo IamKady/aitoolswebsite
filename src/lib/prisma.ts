@@ -152,6 +152,8 @@ const createMockModel = (modelName: string) => {
           .filter(t => t.id !== item.id && t.categoryId === item.categoryId)
           .slice(0, 3)
           .map(alt => ({ alternative: { ...alt, category: mockDb.categories.find(c => c.id === alt.categoryId) || null, tags: [] } }));
+        item.priceHistory = mockDb.priceHistory.filter(ph => ph.toolId === item.id);
+        item.releaseNotes = mockDb.releaseNotes.filter(rn => rn.toolId === item.id).sort((a: any, b: any) => b.releasedAt.getTime() - a.releasedAt.getTime());
         item._count = { favorites: item.favoriteCount || 0, reviews: item.reviewCount || 0 };
       } else if (modelLower === "collection") {
         item.tools = item.tools.map((t: any) => {

@@ -1074,3 +1074,76 @@ export const reviews = [
     createdAt: new Date("2024-06-07"),
   }
 ];
+
+export const priceHistory = [
+  // ChatGPT Price History
+  { id: "ph-cg1", price: 0.0, recordedAt: new Date("2023-01-01"), toolId: "tool-chatgpt" },
+  { id: "ph-cg2", price: 20.0, recordedAt: new Date("2023-02-01"), toolId: "tool-chatgpt" },
+  { id: "ph-cg3", price: 20.0, recordedAt: new Date("2024-01-01"), toolId: "tool-chatgpt" },
+  
+  // Claude Price History
+  { id: "ph-cl1", price: 0.0, recordedAt: new Date("2023-07-01"), toolId: "tool-claude" },
+  { id: "ph-cl2", price: 20.0, recordedAt: new Date("2023-08-01"), toolId: "tool-claude" },
+  { id: "ph-cl3", price: 20.0, recordedAt: new Date("2024-01-01"), toolId: "tool-claude" },
+
+  // Cursor Price History
+  { id: "ph-cu1", price: 0.0, recordedAt: new Date("2023-04-01"), toolId: "tool-cursor" },
+  { id: "ph-cu2", price: 15.0, recordedAt: new Date("2023-09-01"), toolId: "tool-cursor" },
+  { id: "ph-cu3", price: 20.0, recordedAt: new Date("2024-01-01"), toolId: "tool-cursor" },
+];
+
+export const releaseNotes = [
+  // ChatGPT Release Notes
+  {
+    id: "rn-cg1",
+    version: "v4.0.0",
+    title: "Introduction of GPT-4o Multimodal Model",
+    description: "OpenAI launches GPT-4o, a model supporting native integration of voice, real-time image analysis, and substantially faster response times.",
+    releasedAt: new Date("2024-05-13"),
+    toolId: "tool-chatgpt"
+  },
+  {
+    id: "rn-cg2",
+    version: "v3.8.0",
+    title: "Custom GPTs Ecosystem Launch",
+    description: "Plus users can now create specialized versions of ChatGPT that combine custom instructions, extra knowledge files, and API actions.",
+    releasedAt: new Date("2023-11-06"),
+    toolId: "tool-chatgpt"
+  },
+
+  // Claude Release Notes
+  {
+    id: "rn-cl1",
+    version: "v3.5.0",
+    title: "Claude 3.5 Sonnet Release & Artifacts Preview",
+    description: "Anthropic releases Claude 3.5 Sonnet setting new industry benchmarks for coding and reasoning. Introduces 'Artifacts' side-by-side workspace view.",
+    releasedAt: new Date("2024-06-20"),
+    toolId: "tool-claude"
+  },
+  {
+    id: "rn-cl2",
+    version: "v3.0.0",
+    title: "Claude 3 Family: Opus, Sonnet, and Haiku",
+    description: "Anthropic launches three multimodal models with distinct price/performance tiers, raising the maximum context limit to 200,000 tokens.",
+    releasedAt: new Date("2024-03-04"),
+    toolId: "tool-claude"
+  },
+
+  // Cursor Release Notes
+  {
+    id: "rn-cu1",
+    version: "v0.40.0",
+    title: "Composer Multi-file Editing Mode",
+    description: "Cursor releases 'Composer' mode, allowing developers to generate edits across multiple files in parallel in a single interactive prompt.",
+    releasedAt: new Date("2024-08-15"),
+    toolId: "tool-cursor"
+  },
+  {
+    id: "rn-cu2",
+    version: "v0.35.0",
+    title: "Fast Edit Prediction (Tab-to-Accept)",
+    description: "Launches local model-powered predictive auto-completions, allowing developers to jump across locations with single tabs.",
+    releasedAt: new Date("2024-05-10"),
+    toolId: "tool-cursor"
+  }
+];
