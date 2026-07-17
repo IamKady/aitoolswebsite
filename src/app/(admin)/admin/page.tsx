@@ -3,7 +3,8 @@
 import { useState } from "react";
 import {
   Inbox, Database, Star, CheckCircle, XCircle, Plus,
-  ShieldAlert, Settings, LayoutGrid, Eye, Search, AlertCircle
+  ShieldAlert, Settings, LayoutGrid, Eye, Search, AlertCircle,
+  BarChart3, TrendingUp
 } from "lucide-react";
 import { tools as initialTools, categories } from "@/lib/mockDb";
 
@@ -39,7 +40,7 @@ const MOCK_SUBMISSIONS: Submission[] = [
 ];
 
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<"submissions" | "tools" | "create">("submissions");
+  const [activeTab, setActiveTab] = useState<"submissions" | "tools" | "create" | "analytics">("submissions");
   const [submissions, setSubmissions] = useState<Submission[]>(MOCK_SUBMISSIONS);
   const [tools, setTools] = useState<any[]>(initialTools);
   
@@ -164,7 +165,8 @@ export default function AdminDashboardPage() {
         {[
           { id: "submissions", label: "Submissions Queue", badge: submissions.length },
           { id: "tools", label: "Manage Tools", badge: tools.length },
-          { id: "create", label: "Add New Tool" }
+          { id: "create", label: "Add New Tool" },
+          { id: "analytics", label: "Analytics Dashboard" }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -373,6 +375,128 @@ export default function AdminDashboardPage() {
               Publish Tool
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Analytics tab */}
+      {activeTab === "analytics" && (
+        <div className="space-y-6">
+          {/* Analytics Overview Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="p-6 rounded-2xl border border-border bg-card">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted-foreground font-semibold">Total Profile Views</span>
+                <Eye className="w-4 h-4 text-blue-500" />
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                {tools.reduce((sum, t) => sum + (t.viewCount || 0), 0).toLocaleString()}
+              </div>
+              <p className="text-[10px] text-emerald-500 mt-1 flex items-center gap-0.5 font-medium">
+                <TrendingUp className="w-3 h-3" />
+                +18.4% this week
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl border border-border bg-card">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted-foreground font-semibold">Total Favorites</span>
+                <Star className="w-4 h-4 text-yellow-500" />
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                {tools.reduce((sum, t) => sum + (t.favoriteCount || 0), 0).toLocaleString()}
+              </div>
+              <p className="text-[10px] text-emerald-500 mt-1 flex items-center gap-0.5 font-medium">
+                <TrendingUp className="w-3 h-3" />
+                +12.1% this week
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl border border-border bg-card">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted-foreground font-semibold">Avg. Quality Rating</span>
+                <CheckCircle className="w-4 h-4 text-green-500" />
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                {tools.length > 0 ? (tools.reduce((sum, t) => sum + (t.rating || 0), 0) / tools.length).toFixed(2) : "0.00"} / 5.00
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1 font-medium">
+                Calculated across {tools.length} directories
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Top viewed tools */}
+            <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-primary" />
+                Top Viewed Profiles
+              </h3>
+              <div className="divide-y divide-border">
+                {tools
+                  .slice()
+                  .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+                  .slice(0, 5)
+                  .map((t, idx) => (
+                    <div key={t.id} className="flex items-center justify-between py-3 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-muted-foreground w-4">#{idx + 1}</span>
+                        <span className="font-bold text-foreground">{t.name}</span>
+                      </div>
+                      <span className="text-muted-foreground font-semibold">
+                        {(t.viewCount || 0).toLocaleString()} views
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Popular search queries */}
+            <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Search className="w-4 h-4 text-primary" />
+                Trending Search Log
+              </h3>
+              <div className="divide-y divide-border">
+                {[
+                  { term: "chatgpt", count: 1842 },
+                  { term: "claude 3.5 sonnet", count: 1290 },
+                  { term: "free image generator", count: 875 },
+                  { term: "cursor vs vscode", count: 640 },
+                  { term: "ai presentation maker", count: 520 },
+                ].map((log, idx) => (
+                  <div key={idx} className="flex items-center justify-between py-3 text-xs">
+                    <span className="font-semibold text-foreground">"{log.term}"</span>
+                    <span className="text-muted-foreground font-semibold">
+                      {log.count.toLocaleString()} queries
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Category Concentration */}
+          <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+              <LayoutGrid className="w-4 h-4 text-primary" />
+              Category Concentration
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {categories.slice(0, 9).map((cat) => {
+                const count = tools.filter(t => t.categoryId === cat.id).length;
+                return (
+                  <div key={cat.id} className="p-4 rounded-xl border border-border/60 bg-muted/20 flex flex-col justify-between">
+                    <span className="text-xs font-bold text-foreground">{cat.name}</span>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-[10px] text-muted-foreground">Indexed Tools</span>
+                      <span className="text-xs font-extrabold text-primary">{count}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>
