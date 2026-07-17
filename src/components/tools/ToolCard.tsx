@@ -66,9 +66,22 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
             </p>
             <p className="text-xs text-muted-foreground truncate">{tool.tagline}</p>
           </div>
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs text-muted-foreground">{tool.rating.toFixed(1)}</span>
+          <div className="flex items-center gap-3 flex-shrink-0 z-10">
+            <div className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs text-muted-foreground">{tool.rating.toFixed(1)}</span>
+            </div>
+            <span
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(tool.website, "_blank");
+              }}
+              className="p-1 rounded-lg border border-border hover:bg-muted text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+              title="Visit Website"
+            >
+              <ExternalLink className="w-3 h-3" />
+            </span>
           </div>
         </div>
       </Link>
@@ -115,6 +128,17 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
                 className={cn("w-3.5 h-3.5", bookmarked ? "fill-primary text-primary" : "text-muted-foreground")}
               />
             </button>
+            <a
+              href={tool.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 hover:bg-white/10 transition-colors"
+              aria-label="Visit Website"
+              title="Visit Website"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+            </a>
             <Link
               href={`/compare?a=${tool.slug}`}
               onClick={(e) => e.stopPropagation()}
