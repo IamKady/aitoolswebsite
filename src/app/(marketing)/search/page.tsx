@@ -23,11 +23,7 @@ const SORT_OPTIONS = [
   { label: "Most Popular", value: "popular" },
 ];
 
-const CATEGORIES = [
-  "All", "Writing", "Coding", "Image Generation", "Video", "Audio",
-  "Design", "Productivity", "Marketing", "SEO", "Research",
-  "Education", "Chatbots", "Automation",
-];
+// categories will be loaded dynamically from the backend API
 
 export default function SearchPage() {
   return (
@@ -59,6 +55,26 @@ function SearchContent() {
   const [sort, setSort] = useState(searchParams.get("sort") || "relevance");
   const [hasFreeTrial, setHasFreeTrial] = useState(false);
   const [hasApi, setHasApi] = useState(false);
+  const [categoriesList, setCategoriesList] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const names = ["All", ...data.map((c: any) => c.name)];
+          setCategoriesList(names);
+        }
+      })
+      .catch((err) => {
+        console.error("Error loading categories:", err);
+        setCategoriesList([
+          "All", "Writing", "Coding", "Image Generation", "Video", "Audio",
+          "Design", "Productivity", "Marketing", "SEO", "Research",
+          "Education", "Chatbots", "Automation"
+        ]);
+      });
+  }, []);
 
   const doSearch = useCallback(async (resetPage = false) => {
     const currentPage = resetPage ? 1 : page;
@@ -212,7 +228,7 @@ function SearchContent() {
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Category</h3>
                 <div className="space-y-1 max-h-60 overflow-y-auto">
-                  {CATEGORIES.map((cat) => (
+                  {categoriesList.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setCategory(cat)}
