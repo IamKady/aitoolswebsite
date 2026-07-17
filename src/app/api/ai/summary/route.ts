@@ -23,15 +23,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Tool not found" }, { status: 404 });
     }
 
-    // Call OpenAI summary generator
-    let summary = await generateToolSummary({
-      name: tool.name,
-      description: tool.description,
-      features: tool.features.map((f: any) => f.text),
-      pros: tool.pros.map((p: any) => p.text),
-      cons: tool.cons.map((c: any) => c.text),
-      pricing: tool.pricing,
-    });
+        // Call OpenAI summary generator
+    let summary = null;
+    try {
+      summary = await generateToolSummary({
+        name: tool.name,
+        description: tool.description,
+        features: tool.features.map((f: any) => f.text),
+        pros: tool.pros.map((p: any) => p.text),
+        cons: tool.cons.map((c: any) => c.text),
+        pricing: tool.pricing,
+      });
+    } catch (error) {
+      console.error("[generateToolSummary error]", error);
+    }
 
     // Fallback: If OpenAI key is missing, build template summary
     if (!summary) {

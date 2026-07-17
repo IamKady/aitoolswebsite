@@ -10,8 +10,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Both tools are required for comparison" }, { status: 400 });
     }
 
-    // Try calling OpenAI compare
-    let comparison = await compareToolsWithAI(toolA as ToolCardData, toolB as ToolCardData, useCase);
+        // Try calling OpenAI compare
+    let comparison = null;
+    try {
+      comparison = await compareToolsWithAI(toolA as ToolCardData, toolB as ToolCardData, useCase);
+    } catch (error) {
+      console.error("[compareToolsWithAI error]", error);
+    }
 
     // Fallback: If OpenAI key is missing or calls fail, use heuristics
     if (!comparison) {

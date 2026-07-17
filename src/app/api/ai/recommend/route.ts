@@ -13,10 +13,14 @@ export async function POST(req: NextRequest) {
     // First, get the top matching tools from search
     const searchResults = await searchTools({ q: query, limit: 10, sort: "relevance" });
 
-    // Then, get AI recommendations based on those tools
+        // Then, get AI recommendations based on those tools
     let aiData = null;
     if (searchResults.tools.length > 0) {
-      aiData = await getAIRecommendations(query, searchResults.tools as Parameters<typeof getAIRecommendations>[1]);
+      try {
+        aiData = await getAIRecommendations(query, searchResults.tools as Parameters<typeof getAIRecommendations>[1]);
+      } catch (error) {
+        console.error("[getAIRecommendations error]", error);
+      }
     }
 
     // Merge AI recommendations with tool data
