@@ -100,7 +100,7 @@ export default function SubmitToolPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Submit an AI Tool</h1>
-                <p className="text-xs text-muted-foreground">List your product on AIToolHunt</p>
+                <p className="text-xs text-muted-foreground">List your product on ToolWire AI</p>
               </div>
             </div>
 

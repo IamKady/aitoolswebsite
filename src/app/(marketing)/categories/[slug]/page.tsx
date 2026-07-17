@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await prisma.category.findUnique({ where: { slug } });
   if (!category) return { title: "Category Not Found" };
   return {
-    title: `Best ${category.name} AI Tools | AIToolHunt`,
+    title: `Best ${category.name} AI Tools | ToolWire AI`,
     description: `Discover the best ${category.name} AI tools. Compare features, pricing, and reviews to find the perfect tool for your needs.`,
   };
 }

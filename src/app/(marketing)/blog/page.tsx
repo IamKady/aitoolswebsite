@@ -6,7 +6,7 @@ import { ArrowRight, BookOpen, Clock, Calendar } from "lucide-react";
 import { timeAgo } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "AI Blog, News, Tutorials & Reviews | AIToolHunt",
+  title: "AI Blog, News, Tutorials & Reviews | ToolWire AI",
   description: "Read the latest AI updates, step-by-step tool tutorials, deep comparisons, and weekly roundups of AI technology.",
 };
 
@@ -44,7 +44,7 @@ export default async function BlogPage() {
             Insights & Guides
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-            The <span className="gradient-text">AIToolHunt Blog</span>
+            The <span className="gradient-text">ToolWire AI Blog</span>
           </h1>
           <p className="mt-4 text-base text-muted-foreground max-w-xl mx-auto">
             Stay up to date with deep tool reviews, software comparisons, guidelines, and industry trends.

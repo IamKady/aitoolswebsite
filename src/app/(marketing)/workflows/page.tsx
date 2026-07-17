@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Cpu, ArrowDown } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AI Workflows & Guides | AIToolHunt",
+  title: "AI Workflows & Guides | ToolWire AI",
   description: "Browse step-by-step AI workflow templates. Combine multiple AI tools to automate your content creation, coding, and business workflows.",
 };
 

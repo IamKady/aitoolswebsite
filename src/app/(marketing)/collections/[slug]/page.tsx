@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!col) return { title: "Collection Not Found" };
   return {
     title: `${col.title} | AI Tool Collections`,
-    description: col.description || `Browse the best tools in the ${col.title} collection on AIToolHunt.`,
+    description: col.description || `Browse the best tools in the ${col.title} collection on ToolWire AI.`,
   };
 }
 

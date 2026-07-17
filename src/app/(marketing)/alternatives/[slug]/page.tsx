@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tool = await prisma.aITool.findUnique({ where: { slug } });
   if (!tool) return { title: "Alternatives Not Found" };
   return {
-    title: `Best ${tool.name} Alternatives & Similar AI Tools | AIToolHunt`,
+    title: `Best ${tool.name} Alternatives & Similar AI Tools | ToolWire AI`,
     description: `Compare and find the best alternatives to ${tool.name}. Browse reviews, pricing plans, pros/cons, and core features of similar AI tools.`,
   };
 }

@@ -11,7 +11,7 @@ import { AIWorkflows } from "@/components/home/AIWorkflows";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AIToolHunt — Find the Perfect AI Tool in Seconds",
+  title: "ToolWire AI — Find the Perfect AI Tool in Seconds",
   description:
     "Search, compare, review, and discover the world's best AI tools with intelligent recommendations. 500+ AI tools across 30+ categories.",
 };

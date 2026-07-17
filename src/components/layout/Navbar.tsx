@@ -88,8 +88,8 @@ export function Navbar() {
                 <Zap className="w-4 h-4 text-white" />
               </div>
               <span className="font-bold text-lg tracking-tight">
-                <span className="gradient-text">AITool</span>
-                <span className="text-foreground">Hunt</span>
+                <span className="gradient-text">ToolWire</span>
+                <span className="text-foreground"> AI</span>
               </span>
             </Link>
 

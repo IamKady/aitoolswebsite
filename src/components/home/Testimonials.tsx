@@ -9,7 +9,7 @@ const TESTIMONIALS = [
     avatar: null,
     initials: "SC",
     rating: 5,
-    text: "AIToolHunt saved me hours of research. I found the perfect AI writing tool for my blog in under 5 minutes. The comparison feature is a game-changer!",
+    text: "ToolWire AI saved me hours of research. I found the perfect AI writing tool for my blog in under 5 minutes. The comparison feature is a game-changer!",
     color: "#6366f1",
   },
   {
@@ -39,7 +39,7 @@ const TESTIMONIALS = [
     avatar: null,
     initials: "DK",
     rating: 5,
-    text: "Found our entire AI tool stack for our startup through AIToolHunt. The collections feature is brilliant — especially the 'Best AI for Startups' list.",
+    text: "Found our entire AI tool stack for our startup through ToolWire AI. The collections feature is brilliant — especially the 'Best AI for Startups' list.",
     color: "#10b981",
   },
   {
@@ -49,7 +49,7 @@ const TESTIMONIALS = [
     avatar: null,
     initials: "AJ",
     rating: 5,
-    text: "As a student, finding free AI tools was challenging until I discovered AIToolHunt. The 'Free AI Tools' collection is incredible — uses it daily for assignments!",
+    text: "As a student, finding free AI tools was challenging until I discovered ToolWire AI. The 'Free AI Tools' collection is incredible — uses it daily for assignments!",
     color: "#f59e0b",
   },
   {

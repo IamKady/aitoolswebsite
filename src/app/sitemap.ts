@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aitoolhunt.com";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
 
   // Get all tools
   const tools = await prisma.aITool.findMany({

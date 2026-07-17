@@ -5,8 +5,8 @@ import { Providers } from "@/components/providers";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
-    default: "AIToolHunt — Find the Perfect AI Tool in Seconds",
-    template: "%s | AIToolHunt",
+    default: "ToolWire AI — Find the Perfect AI Tool in Seconds",
+    template: "%s | ToolWire AI",
   },
   description:
     "Search, compare, review, and discover the world's best AI tools with intelligent recommendations. Find the perfect AI tool for writing, coding, image generation, video, and more.",
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
     "ChatGPT alternatives",
     "AI for business",
   ],
-  authors: [{ name: "AIToolHunt" }],
-  creator: "AIToolHunt",
+  authors: [{ name: "ToolWire AI" }],
+  creator: "ToolWire AI",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: "AIToolHunt",
-    title: "AIToolHunt — Find the Perfect AI Tool in Seconds",
+    siteName: "ToolWire AI",
+    title: "ToolWire AI — Find the Perfect AI Tool in Seconds",
     description:
       "Search, compare, review, and discover the world's best AI tools with intelligent recommendations.",
     images: [
@@ -36,17 +36,17 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AIToolHunt — AI Tool Search Engine",
+        alt: "ToolWire AI — AI Tool Search Engine",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AIToolHunt — Find the Perfect AI Tool in Seconds",
+    title: "ToolWire AI — Find the Perfect AI Tool in Seconds",
     description:
       "Search, compare, review, and discover the world's best AI tools.",
     images: ["/og-image.png"],
-    creator: "@aitoolhunt",
+    creator: "@toolwireai",
   },
   robots: {
     index: true,

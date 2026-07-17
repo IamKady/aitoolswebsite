@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Layers } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "AI Tool Collections | AIToolHunt",
+  title: "AI Tool Collections | ToolWire AI",
   description: "Browse hand-curated collections of the best AI tools for developers, students, designers, marketing, productivity, and more.",
 };
 

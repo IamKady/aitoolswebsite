@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!tool) return { title: "Tool Not Found" };
 
   return {
-    title: tool.metaTitle || `${tool.name} Review & Alternatives | AIToolHunt`,
+    title: tool.metaTitle || `${tool.name} Review & Alternatives | ToolWire AI`,
     description: tool.metaDescription || tool.tagline,
     openGraph: {
       title: tool.name,

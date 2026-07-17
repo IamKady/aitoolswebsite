@@ -27,11 +27,11 @@ export function generateBreadcrumbJsonLd(items: Array<{ name: string; item: stri
 }
 
 export function generateWebSiteJsonLd() {
-  const url = process.env.NEXT_PUBLIC_APP_URL || "https://aitoolhunt.com";
+  const url = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "AIToolHunt",
+    "name": "ToolWire AI",
     "url": url,
     "potentialAction": {
       "@type": "SearchAction",
@@ -53,7 +53,7 @@ export function generateBlogPostingJsonLd(post: {
   author: string;
   slug: string;
 }) {
-  const url = process.env.NEXT_PUBLIC_APP_URL || "https://aitoolhunt.com";
+  const url = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -68,7 +68,7 @@ export function generateBlogPostingJsonLd(post: {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "AIToolHunt",
+      "name": "ToolWire AI",
       "logo": {
         "@type": "ImageObject",
         "url": `${url}/logo-dark.png`

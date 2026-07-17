@@ -5,7 +5,7 @@ export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const title = searchParams.get("title") || "AIToolHunt";
+  const title = searchParams.get("title") || "ToolWire AI";
   const description = searchParams.get("description") || "Find the Perfect AI Tool in Seconds";
 
   return new ImageResponse(
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
           >
             <div style={{ color: "white", fontSize: 24 }}>⚡</div>
           </div>
-          <div style={{ color: "white", fontSize: 24, fontWeight: 700 }}>AIToolHunt</div>
+          <div style={{ color: "white", fontSize: 24, fontWeight: 700 }}>ToolWire AI</div>
         </div>
 
         {/* Title */}
