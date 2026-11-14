@@ -8,6 +8,7 @@ import { Statistics } from "@/components/home/Statistics";
 import { Newsletter } from "@/components/home/Newsletter";
 import { Testimonials } from "@/components/home/Testimonials";
 import { AIWorkflows } from "@/components/home/AIWorkflows";
+import { StackBuilder } from "@/components/home/StackBuilder";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <Statistics />
+      <StackBuilder />
       <FeaturedTools />
       <PopularCategories />
       <TrendingTools />
