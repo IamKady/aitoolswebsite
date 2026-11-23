@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site";
+import { EDITORIAL_ARTICLES } from "@/lib/editorial-articles";
 
 type SlugRow = { slug: string };
 
@@ -34,6 +35,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     `${SITE_URL}/about`,
     `${SITE_URL}/contact`,
   ];
+  const postSlugs = new Set([
+    ...posts.map((post) => post.slug),
+    ...EDITORIAL_ARTICLES.map((post) => post.slug),
+  ]);
 
   return [
     ...staticPages.map((url) => ({ url })),
@@ -44,6 +49,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...collections.map((collection) => ({
       url: `${SITE_URL}/collections/${collection.slug}`,
     })),
-    ...posts.map((post) => ({ url: `${SITE_URL}/blog/${post.slug}` })),
+    ...Array.from(postSlugs, (slug) => ({
+      url: `${SITE_URL}/blog/${slug}`,
+    })),
   ];
 }

@@ -7,12 +7,16 @@ import { cache } from "react";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import { JsonLd, generateBlogPostingJsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL } from "@/lib/site";
+import { getEditorialArticle } from "@/lib/editorial-articles";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 const getPublishedPost = cache(async (slug: string) => {
+  const editorialArticle = getEditorialArticle(slug);
+  if (editorialArticle) return editorialArticle;
+
   const post = await prisma.blogPost.findUnique({ where: { slug } });
   return post?.published ? post : null;
 });
@@ -111,11 +115,13 @@ export default async function BlogPostDetailPage({ params }: Props) {
     slug: post.slug,
   });
 
-  // Increment viewCount asynchronously
-  prisma.blogPost.update({
-    where: { id: post.id },
-    data: { viewCount: { increment: 1 } },
-  }).catch(() => {});
+  const editorialArticle = getEditorialArticle(slug);
+  if (!editorialArticle) {
+    prisma.blogPost.update({
+      where: { id: post.id },
+      data: { viewCount: { increment: 1 } },
+    }).catch(() => {});
+  }
 
   const categoryLabels: Record<string, string> = {
     news: "AI News",
@@ -196,6 +202,36 @@ export default async function BlogPostDetailPage({ params }: Props) {
         <article className="prose prose-invert max-w-none">
           {renderContent(post.content)}
         </article>
+        {editorialArticle && (
+          <section
+            aria-labelledby="sources-heading"
+            className="mt-12 rounded-2xl border border-border bg-card p-6"
+          >
+            <h2
+              id="sources-heading"
+              className="text-lg font-bold text-foreground"
+            >
+              Sources and further reading
+            </h2>
+            <ul className="mt-4 space-y-3">
+              {editorialArticle.sources.map((source) => (
+                <li key={source.url}>
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {source.title}
+                  </a>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {source.publisher} · {source.publishedAt}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import prisma from "@/lib/prisma";
+import { mergeEditorialArticles } from "@/lib/editorial-articles";
 
 type LatestArticle = {
   slug: string;
@@ -21,7 +22,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 });
 
 export async function LatestArticles() {
-  const posts: LatestArticle[] = await prisma.blogPost.findMany({
+  const databasePosts: LatestArticle[] = await prisma.blogPost.findMany({
     where: { published: true },
     orderBy: { publishedAt: "desc" },
     take: 3,
@@ -36,6 +37,7 @@ export async function LatestArticles() {
       readingTime: true,
     },
   });
+  const posts = mergeEditorialArticles(databasePosts).slice(0, 3);
 
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">

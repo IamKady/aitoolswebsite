@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { SITE_URL } from "@/lib/site";
+import { mergeEditorialArticles } from "@/lib/editorial-articles";
 
 export const metadata: Metadata = {
   title: "AI Guides, Tool Reviews & Tutorials",
@@ -33,10 +34,11 @@ type BlogPostListItem = {
 };
 
 export default async function BlogPage() {
-  const posts: BlogPostListItem[] = await prisma.blogPost.findMany({
+  const databasePosts: BlogPostListItem[] = await prisma.blogPost.findMany({
     where: { published: true },
     orderBy: { publishedAt: "desc" },
   });
+  const posts = mergeEditorialArticles(databasePosts);
 
   const categoryLabels: Record<string, string> = {
     news: "AI News",
