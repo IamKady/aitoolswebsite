@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  PenTool, Code2, Image, Video, Music, Bot, Zap, Search,
+  ArrowRight, PenTool, Code2, Image, Video, Music, Bot, Zap, Search,
   Share2, Brain, BookOpen, Presentation, Palette, Headphones,
   BarChart3, Shield, Globe, FileText, Layers, Cpu, Mic2,
   GraduationCap, Briefcase, ShoppingCart, Heart, Scale, DollarSign,
@@ -38,62 +38,62 @@ const categories = [
   { name: "3D & Animation", slug: "3d", icon: Zap, color: "#7c2d12", count: 8 },
 ];
 
+const featuredCategories = categories.filter(({ slug }) =>
+  ["writing", "coding", "image-generation", "video", "productivity", "research", "education", "marketing"].includes(slug)
+);
+
 export function PopularCategories() {
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8">
+    <section className="bg-muted/30 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-10">
+        <div className="mb-9 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Explore by use case</p>
-            <h2 className="text-3xl font-bold text-foreground">
-              Find tools for what you want to do
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              Explore by use case
+            </p>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Start with what you want to do
             </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Find a focused set of tools for the task, then explore the full directory when you’re ready.
+            </p>
           </div>
           <Link
             href="/categories"
-            className="text-sm text-primary hover:underline hidden sm:block"
+            className="hidden min-h-11 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-primary sm:inline-flex"
           >
-            View all →
+            All categories <ArrowRight aria-hidden="true" className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-3">
-          {categories.map((cat, i) => (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {featuredCategories.map((cat) => (
             <Link
               key={cat.slug}
               href={`/categories/${cat.slug}`}
-              className="group flex flex-col items-center gap-2.5 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 text-center"
-              style={
-                {
-                  "--cat-color": cat.color,
-                  animationDelay: `${i * 30}ms`,
-                } as React.CSSProperties
-              }
+              className="group flex min-h-24 items-center gap-4 rounded-2xl border border-border/80 bg-card px-4 py-4 transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-slate-950/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200"
-                style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+                aria-hidden="true"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-transform group-hover:scale-105"
+                style={{ backgroundColor: `${cat.color}18`, color: cat.color }}
               >
-                <cat.icon className="w-5 h-5" />
+                <cat.icon className="h-5 w-5" />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                  {cat.name}
-                </p>
-              </div>
+              <span className="min-w-0 flex-1 text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                {cat.name}
+              </span>
+              <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
             </Link>
           ))}
         </div>
 
-        {/* View all CTA */}
-        <div className="text-center mt-8 sm:hidden">
+        <div className="mt-6 sm:hidden">
           <Link
             href="/categories"
-            className="text-sm text-primary hover:underline"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground hover:text-primary"
           >
-            View all categories →
+            All categories <ArrowRight aria-hidden="true" className="h-4 w-4" />
           </Link>
         </div>
       </div>

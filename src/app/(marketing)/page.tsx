@@ -26,9 +26,9 @@ export default function HomePage() {
     <>
       <JsonLd data={generateWebSiteJsonLd()} />
       <HeroSection />
-      <StackBuilder />
       <FeaturedTools />
       <PopularCategories />
+      <StackBuilder />
       <TrendingTools />
       <AIWorkflows />
       <LatestArticles />

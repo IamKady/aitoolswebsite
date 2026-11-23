@@ -90,10 +90,10 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed left-0 right-0 top-0 z-50 border-b border-border/70 transition-[background-color,box-shadow] duration-300",
           scrolled
-            ? "glass border-b border-white/10 shadow-lg shadow-black/5"
-            : "bg-transparent"
+            ? "bg-background/95 shadow-sm shadow-slate-950/5 backdrop-blur-xl"
+            : "bg-background/80 backdrop-blur-lg"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -147,14 +147,14 @@ export function Navbar() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 8 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute top-full left-0 mt-2 w-64 glass border border-white/10 rounded-xl shadow-xl overflow-hidden"
+                          className="absolute left-0 top-full mt-2 w-64 overflow-hidden rounded-xl border border-border bg-card/95 shadow-xl backdrop-blur-xl"
                         >
                           {link.children.map((child) => (
                             <Link
                               key={child.href}
                               href={child.href}
                               onClick={closeNavMenus}
-                              className="flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
+                              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-accent"
                             >
                               <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                                 <child.icon aria-hidden="true" className="w-3.5 h-3.5 text-primary" />
@@ -273,7 +273,7 @@ export function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden glass border-t border-white/10"
+              className="border-t border-border bg-background/95 backdrop-blur-xl md:hidden"
             >
               <div className="px-4 py-4 space-y-1">
                 <Link
