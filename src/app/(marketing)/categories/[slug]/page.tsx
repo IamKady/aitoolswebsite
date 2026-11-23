@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -14,6 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Best ${category.name} AI Tools | ToolWire AI`,
     description: `Discover the best ${category.name} AI tools. Compare features, pricing, and reviews to find the perfect tool for your needs.`,
+    alternates: { canonical: `${SITE_URL}/categories/${category.slug}` },
   };
 }
 

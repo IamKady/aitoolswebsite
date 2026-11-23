@@ -4,6 +4,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArrowLeft, Sparkles } from "lucide-react";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Best ${tool.name} Alternatives & Similar AI Tools | ToolWire AI`,
     description: `Compare and find the best alternatives to ${tool.name}. Browse reviews, pricing plans, pros/cons, and core features of similar AI tools.`,
+    alternates: { canonical: `${SITE_URL}/alternatives/${tool.slug}` },
   };
 }
 

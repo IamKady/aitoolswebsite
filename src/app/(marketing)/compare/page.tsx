@@ -303,7 +303,7 @@ function CompareContent() {
                         <a
                           href={tool.website}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel={tool.sponsored ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
                           className="inline-flex items-center gap-1.5 px-4 py-2 gradient-bg text-white rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
                         >
                           Visit {tool.name}

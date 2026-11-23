@@ -1,10 +1,13 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AI Tool Categories — Browse by Category",
-  description: "Browse 500+ AI tools organized into 30+ categories. Find the best AI tools for writing, coding, image generation, video, audio, and more.",
+  title: "AI Tool Categories",
+  description:
+    "Browse AI tools by category, from writing and coding to research, design, education, and productivity.",
+  alternates: { canonical: `${SITE_URL}/categories` },
 };
 
 export default async function CategoriesPage() {
@@ -29,7 +32,7 @@ export default async function CategoriesPage() {
             AI Tool <span className="gradient-text">Categories</span>
           </h1>
           <p className="text-muted-foreground text-sm">
-            Browse {categories.length} categories with 500+ AI tools
+            Explore AI tools by what you want to get done
           </p>
         </div>
       </div>

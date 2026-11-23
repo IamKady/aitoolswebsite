@@ -4,6 +4,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArrowLeft, Cpu, ArrowDown, Star, CheckCircle, ExternalLink } from "lucide-react";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${wf.title} | AI Workflows`,
     description: wf.description || `Chain AI tools step-by-step for ${wf.title}.`,
+    alternates: { canonical: `${SITE_URL}/workflows/${wf.slug}` },
   };
 }
 
@@ -141,7 +143,7 @@ export default async function WorkflowDetailPage({ params }: Props) {
                       <a
                         href={step.tool.website}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel={step.tool.sponsored ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
                         className="inline-flex items-center gap-1 px-4 py-2 rounded-lg border border-border text-xs text-muted-foreground hover:text-foreground font-semibold transition-all duration-200"
                       >
                         Visit Website

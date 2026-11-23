@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import { ClerkProvider } from "@clerk/nextjs";
+import { MotionConfig } from "framer-motion";
 import { useState } from "react";
 
 // Filter out the React 19 script tag warning
@@ -41,10 +42,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
           enableSystem
           disableTransitionOnChange={false}
         >
-          {children}
-          {process.env.NODE_ENV === "development" && (
-            <ReactQueryDevtools initialIsOpen={false} />
-          )}
+          <MotionConfig reducedMotion="user">
+            {children}
+            {process.env.NODE_ENV === "development" && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
+          </MotionConfig>
         </ThemeProvider>
       </QueryClientProvider>
     </ClerkProvider>

@@ -1,67 +1,49 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
+import { SITE_URL } from "@/lib/site";
+
+type SlugRow = { slug: string };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
-
-  // Get all tools
-  const tools = await prisma.aITool.findMany({
-    select: { slug: true, updatedAt: true },
-  }).catch(() => []);
-
-  // Get all categories
-  const categories = await prisma.category.findMany({
-    select: { slug: true, updatedAt: true },
-  }).catch(() => []);
-
-  // Get all collections
-  const collections = await prisma.collection.findMany({
-    select: { slug: true, updatedAt: true },
-  }).catch(() => []);
-
-  // Get all blog posts
-  const posts = await prisma.blogPost.findMany({
-    where: { published: true },
-    select: { slug: true, updatedAt: true },
-  }).catch(() => []);
+  const [tools, categories, collections, posts]: [
+    SlugRow[],
+    SlugRow[],
+    SlugRow[],
+    SlugRow[],
+  ] = await Promise.all([
+    prisma.aITool.findMany({ select: { slug: true } }),
+    prisma.category.findMany({ select: { slug: true } }),
+    prisma.collection.findMany({ select: { slug: true } }),
+    prisma.blogPost.findMany({
+      where: { published: true },
+      select: { slug: true },
+    }),
+  ]);
 
   const staticPages = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1.0 },
-    { url: `${baseUrl}/tools`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
-    { url: `${baseUrl}/categories`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${baseUrl}/collections`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${baseUrl}/compare`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
-    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 },
-    { url: `${baseUrl}/ai-assistant`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
-    { url: `${baseUrl}/submit`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    SITE_URL,
+    `${SITE_URL}/tools`,
+    `${SITE_URL}/categories`,
+    `${SITE_URL}/collections`,
+    `${SITE_URL}/compare`,
+    `${SITE_URL}/blog`,
+    `${SITE_URL}/ai-assistant`,
+    `${SITE_URL}/workflows`,
+    `${SITE_URL}/advertise`,
+    `${SITE_URL}/submit`,
+    `${SITE_URL}/about`,
+    `${SITE_URL}/contact`,
   ];
 
   return [
-    ...staticPages,
-    ...tools.map((tool: any) => ({
-      url: `${baseUrl}/tools/${tool.slug}`,
-      lastModified: tool.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
+    ...staticPages.map((url) => ({ url })),
+    ...tools.map((tool) => ({ url: `${SITE_URL}/tools/${tool.slug}` })),
+    ...categories.map((category) => ({
+      url: `${SITE_URL}/categories/${category.slug}`,
     })),
-    ...categories.map((cat: any) => ({
-      url: `${baseUrl}/categories/${cat.slug}`,
-      lastModified: cat.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
+    ...collections.map((collection) => ({
+      url: `${SITE_URL}/collections/${collection.slug}`,
     })),
-    ...collections.map((col: any) => ({
-      url: `${baseUrl}/collections/${col.slug}`,
-      lastModified: col.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    })),
-    ...posts.map((post: any) => ({
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: post.updatedAt,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
+    ...posts.map((post) => ({ url: `${SITE_URL}/blog/${post.slug}` })),
   ];
 }

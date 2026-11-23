@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "ToolWire AI — Find the Perfect AI Tool in Seconds",
+    default: "ToolWire AI — Explore AI Tools & Practical Guides",
     template: "%s | ToolWire AI",
   },
   description:
-    "Search, compare, review, and discover the world's best AI tools with intelligent recommendations. Find the perfect AI tool for writing, coding, image generation, video, and more.",
+    "Explore AI tools, compare features and pricing, read practical guides, and find alternatives for work, study, creativity, and everyday tasks.",
   keywords: [
     "AI tools",
     "artificial intelligence",
@@ -26,26 +27,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_APP_URL,
     siteName: "ToolWire AI",
-    title: "ToolWire AI — Find the Perfect AI Tool in Seconds",
+    title: "ToolWire AI — Explore AI Tools & Practical Guides",
     description:
-      "Search, compare, review, and discover the world's best AI tools with intelligent recommendations.",
+      "Explore AI tools, compare features and pricing, and read practical guides.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "ToolWire AI — AI Tool Search Engine",
+        alt: "ToolWire AI — discover AI tools and practical guides",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToolWire AI — Find the Perfect AI Tool in Seconds",
+    title: "ToolWire AI — Explore AI Tools & Practical Guides",
     description:
-      "Search, compare, review, and discover the world's best AI tools.",
-    images: ["/og-image.png"],
+      "Explore AI tools, compare features and pricing, and read practical guides.",
+    images: ["/api/og"],
     creator: "@toolwireai",
   },
   robots: {
@@ -58,9 +58,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  verification: {
-    google: "your-google-verification-code",
   },
 };
 

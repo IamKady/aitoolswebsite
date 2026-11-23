@@ -12,6 +12,7 @@ import prisma from "@/lib/prisma";
 import { PricingBadge } from "@/components/tools/ToolCard";
 import { BookmarkButton } from "@/components/tools/BookmarkButton";
 import { timeAgo } from "@/lib/utils";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -64,7 +65,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: tool.metaTitle || `${tool.name} Review & Alternatives | ToolWire AI`,
     description: tool.metaDescription || tool.tagline,
+    alternates: { canonical: `${SITE_URL}/tools/${tool.slug}` },
     openGraph: {
+      url: `${SITE_URL}/tools/${tool.slug}`,
       title: tool.name,
       description: tool.tagline,
       images: tool.logo ? [tool.logo] : [],
@@ -170,6 +173,11 @@ export default async function ToolDetailPage({ params }: Props) {
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-2xl font-bold text-foreground">{tool.name}</h1>
                   {tool.verified && <CheckCircle2 className="w-5 h-5 text-blue-500" />}
+                  {tool.sponsored && (
+                    <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+                      Sponsored
+                    </span>
+                  )}
                   {tool.featured && (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Featured</span>
                   )}
@@ -495,7 +503,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 <a
                   href={tool.website}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel={tool.sponsored ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
                   className="flex items-center justify-center gap-2 w-full py-3 gradient-bg text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
                 >
                   <Globe className="w-4 h-4" />

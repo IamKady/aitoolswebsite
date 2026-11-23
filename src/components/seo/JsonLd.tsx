@@ -1,14 +1,17 @@
 import React from "react";
+import { SITE_URL } from "@/lib/site";
 
 interface JsonLdProps {
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 export function JsonLd({ data }: JsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
     />
   );
 }
@@ -27,7 +30,7 @@ export function generateBreadcrumbJsonLd(items: Array<{ name: string; item: stri
 }
 
 export function generateWebSiteJsonLd() {
-  const url = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
+  const url = SITE_URL;
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -49,17 +52,17 @@ export function generateBlogPostingJsonLd(post: {
   excerpt: string;
   coverImage: string | null;
   publishedAt: Date | string | null;
-  updatedAt: Date | string | null;
+  updatedAt?: Date | string | null;
   author: string;
   slug: string;
 }) {
-  const url = process.env.NEXT_PUBLIC_APP_URL || "https://toolwire.ai";
+  const url = SITE_URL;
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.excerpt,
-    "image": post.coverImage || undefined,
+    "image": post.coverImage ? new URL(post.coverImage, url).toString() : undefined,
     "datePublished": post.publishedAt || undefined,
     "dateModified": post.updatedAt || undefined,
     "author": {
@@ -69,10 +72,6 @@ export function generateBlogPostingJsonLd(post: {
     "publisher": {
       "@type": "Organization",
       "name": "ToolWire AI",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${url}/logo-dark.png`
-      }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",

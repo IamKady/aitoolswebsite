@@ -9,14 +9,14 @@ import {
   Bookmark,
   GitCompare,
   Share2,
-  Sparkles,
   CheckCircle2,
   Zap,
 } from "lucide-react";
 import { cn, formatPrice, truncate } from "@/lib/utils";
 import { ToolCardData } from "@/types";
 import { PricingType } from "@prisma/client";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { useBookmarkStore } from "@/store/bookmarkStore";
 
 interface ToolCardProps {
   tool: ToolCardData;
@@ -31,25 +31,61 @@ const pricingConfig: Record<PricingType, { label: string; className: string }> =
   OPEN_SOURCE: { label: "Open Source", className: "badge-opensource" },
 };
 
+const subscribeToBookmarkHydration = (listener: () => void) =>
+  useBookmarkStore.persist.onFinishHydration(listener);
+const getBookmarkHydrationSnapshot = () => useBookmarkStore.persist.hasHydrated();
+const getServerBookmarkHydrationSnapshot = () => false;
+
 export function ToolCard({ tool, className, variant = "default" }: ToolCardProps) {
-  const [bookmarked, setBookmarked] = useState(false);
+  const hasHydrated = useSyncExternalStore(
+    subscribeToBookmarkHydration,
+    getBookmarkHydrationSnapshot,
+    getServerBookmarkHydrationSnapshot
+  );
+  const bookmarked = useBookmarkStore((state) =>
+    state.bookmarkedTools.some((savedTool) => savedTool.id === tool.id)
+  );
+  const addBookmark = useBookmarkStore((state) => state.addBookmark);
+  const removeBookmark = useBookmarkStore((state) => state.removeBookmark);
+  const [shareStatus, setShareStatus] = useState("");
   const pricing = pricingConfig[tool.pricing];
+  const isBookmarked = hasHydrated && bookmarked;
+  const websiteRel = tool.sponsored
+    ? "sponsored nofollow noopener noreferrer"
+    : "noopener noreferrer";
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setBookmarked(!bookmarked);
-    // TODO: API call to bookmark
+    if (bookmarked) {
+      removeBookmark(tool.id);
+    } else {
+      addBookmark(tool);
+    }
   };
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigator.share?.({
+
+    const shareData = {
       title: tool.name,
       text: tool.tagline,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/tools/${tool.slug}`,
-    });
+      url: new URL(`/tools/${tool.slug}`, window.location.origin).toString(),
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        setShareStatus("Link copied.");
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      console.error("Could not share tool link", error);
+      setShareStatus("Could not share the link. Please try again.");
+    }
   };
 
   if (variant === "compact") {
@@ -67,21 +103,12 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
             <p className="text-xs text-muted-foreground truncate">{tool.tagline}</p>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0 z-10">
-            <div className="flex items-center gap-1">
+            {tool.reviewCount > 0 && tool.rating > 0 && (
+              <div className="flex items-center gap-1">
               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
               <span className="text-xs text-muted-foreground">{tool.rating.toFixed(1)}</span>
-            </div>
-            <span
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                window.open(tool.website, "_blank");
-              }}
-              className="p-1 rounded-lg border border-border hover:bg-muted text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-              title="Visit Website"
-            >
-              <ExternalLink className="w-3 h-3" />
-            </span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -118,43 +145,48 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
           )}
 
           {/* Action buttons (appear on hover) */}
-          <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
             <button
+              type="button"
               onClick={handleBookmark}
               className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
-              aria-label="Bookmark tool"
+              aria-label={isBookmarked ? `Remove ${tool.name} from saved tools` : `Save ${tool.name}`}
+              aria-pressed={isBookmarked}
             >
               <Bookmark
-                className={cn("w-3.5 h-3.5", bookmarked ? "fill-primary text-primary" : "text-muted-foreground")}
+                aria-hidden="true"
+                className={cn("w-3.5 h-3.5", isBookmarked ? "fill-primary text-primary" : "text-muted-foreground")}
               />
             </button>
             <a
               href={tool.website}
               target="_blank"
-              rel="noopener noreferrer"
+              rel={websiteRel}
               onClick={(e) => e.stopPropagation()}
               className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 hover:bg-white/10 transition-colors"
-              aria-label="Visit Website"
-              title="Visit Website"
+              aria-label={`Visit ${tool.name} website`}
+              title={`Visit ${tool.name} website`}
             >
-              <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+              <ExternalLink aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             </a>
             <Link
               href={`/compare?a=${tool.slug}`}
               onClick={(e) => e.stopPropagation()}
               className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
-              aria-label="Compare tool"
+              aria-label={`Compare ${tool.name}`}
             >
-              <GitCompare className="w-3.5 h-3.5 text-muted-foreground" />
+              <GitCompare aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             </Link>
             <button
+              type="button"
               onClick={handleShare}
               className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
-              aria-label="Share tool"
+              aria-label={`Share ${tool.name}`}
             >
-              <Share2 className="w-3.5 h-3.5 text-muted-foreground" />
+              <Share2 aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite">{shareStatus}</span>
 
           {/* Card body */}
           <div className="p-5 flex flex-col flex-1">
@@ -164,13 +196,13 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-1.5">
                   <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors truncate">
-                    <Link href={`/tools/${tool.slug}`} className="focus:outline-none">
+                    <Link href={`/tools/${tool.slug}`} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                       <span className="absolute inset-0" aria-hidden="true" />
                       {tool.name}
                     </Link>
                   </h3>
                   {tool.verified && (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <CheckCircle2 aria-label="Verified listing" className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
@@ -212,15 +244,21 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
                 )}
               </div>
               {/* Rating */}
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs font-medium text-foreground">
-                  {tool.rating.toFixed(1)}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  ({tool.reviewCount})
-                </span>
-              </div>
+              {tool.reviewCount > 0 && tool.rating > 0 && (
+                <div
+                  className="flex items-center gap-1"
+                  role="img"
+                  aria-label={`${tool.rating.toFixed(1)} out of 5 from ${tool.reviewCount} reviews`}
+                >
+                  <Star aria-hidden="true" className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                  <span className="text-xs font-medium text-foreground">
+                    {tool.rating.toFixed(1)}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    ({tool.reviewCount})
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -229,7 +267,7 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
             <a
               href={tool.website}
               target="_blank"
-              rel="noopener noreferrer"
+              rel={websiteRel}
               onClick={(e) => e.stopPropagation()}
               className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl border border-primary/30 text-primary text-sm font-medium hover:bg-primary hover:text-white hover:border-primary transition-all duration-200"
             >

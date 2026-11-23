@@ -45,9 +45,9 @@ export function PopularCategories() {
         {/* Header */}
         <div className="flex items-end justify-between mb-10">
           <div>
-            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Browse by Category</p>
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Explore by use case</p>
             <h2 className="text-3xl font-bold text-foreground">
-              Explore <span className="gradient-text">30+ Categories</span>
+              Find tools for what you want to do
             </h2>
           </div>
           <Link
@@ -82,7 +82,6 @@ export function PopularCategories() {
                 <p className="text-xs font-semibold text-foreground leading-tight line-clamp-2 group-hover:text-primary transition-colors">
                   {cat.name}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{cat.count} tools</p>
               </div>
             </Link>
           ))}

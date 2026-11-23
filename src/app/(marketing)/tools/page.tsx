@@ -2,10 +2,13 @@ import Link from "next/link";
 import { ToolCard } from "@/components/tools/ToolCard";
 import prisma from "@/lib/prisma";
 import { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "All AI Tools — 500+ Curated AI Tools",
-  description: "Browse 500+ curated AI tools across 30+ categories. Find AI tools for writing, coding, image generation, video, audio, productivity, and more.",
+  title: "Explore AI Tools",
+  description:
+    "Explore AI tools by category, pricing, and use case. Compare features and find software for writing, coding, research, design, and more.",
+  alternates: { canonical: `${SITE_URL}/tools` },
 };
 
 interface Props {

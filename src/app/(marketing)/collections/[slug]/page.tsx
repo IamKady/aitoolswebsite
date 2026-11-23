@@ -4,6 +4,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArrowLeft, Layers } from "lucide-react";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${col.title} | AI Tool Collections`,
     description: col.description || `Browse the best tools in the ${col.title} collection on ToolWire AI.`,
+    alternates: { canonical: `${SITE_URL}/collections/${col.slug}` },
   };
 }
 

@@ -63,8 +63,7 @@ export function Newsletter() {
               </h2>
               <p className="text-muted-foreground mb-8 leading-relaxed">
                 Get weekly updates on the best new AI tools, exclusive comparisons,
-                and expert recommendations delivered straight to your inbox.
-                Join 10,000+ AI enthusiasts.
+                and practical guidance delivered straight to your inbox.
               </p>
 
               {/* Features list */}
@@ -92,7 +91,7 @@ export function Newsletter() {
                   >
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
                     <p className="text-foreground font-medium">You&apos;re subscribed! 🎉</p>
-                    <p className="text-sm text-muted-foreground">Check your inbox for a confirmation email.</p>
+                    <p role="status" className="text-sm text-muted-foreground">Check your inbox for a confirmation email.</p>
                   </motion.div>
                 ) : (
                   <motion.form
@@ -101,17 +100,25 @@ export function Newsletter() {
                     className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
                   >
                     <div className="flex-1">
+                      <label htmlFor="newsletter-email" className="sr-only">
+                        Email address
+                      </label>
                       <input
                         type="email"
+                        name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email address"
+                        placeholder="you@example.com…"
+                        autoComplete="email"
+                        spellCheck={false}
                         className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                         id="newsletter-email"
+                        aria-invalid={Boolean(error)}
+                        aria-describedby={error ? "newsletter-error" : undefined}
                         required
                       />
                       {error && (
-                        <p className="text-xs text-red-500 mt-1 text-left">{error}</p>
+                        <p id="newsletter-error" role="alert" className="text-xs text-red-500 mt-1 text-left">{error}</p>
                       )}
                     </div>
                     <button
@@ -120,7 +127,10 @@ export function Newsletter() {
                       className="flex items-center justify-center gap-2 px-6 py-3 gradient-bg text-white font-medium rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity shadow-lg shadow-primary/25 flex-shrink-0"
                     >
                       {status === "loading" ? (
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <>
+                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true" />
+                          Subscribing…
+                        </>
                       ) : (
                         <>
                           <Send className="w-4 h-4" />

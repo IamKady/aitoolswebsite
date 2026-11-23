@@ -33,7 +33,7 @@ export default function AboutPage() {
             <Compass className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
             <div>
               <h4 className="text-xs font-bold text-foreground">Original Datasets</h4>
-              <p className="text-[10px] text-muted-foreground mt-0.5">Explore 2,500+ curated AI products classified into 110 categories.</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Explore AI products organized by category, pricing, and use case.</p>
             </div>
           </div>
           <div className="flex gap-2">

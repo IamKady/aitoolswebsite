@@ -1,25 +1,43 @@
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
-import { ArrowLeft, Clock, Calendar, Share2, MessageSquare } from "lucide-react";
+import { cache } from "react";
+import { ArrowLeft, Clock, Calendar } from "lucide-react";
+import { JsonLd, generateBlogPostingJsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
+const getPublishedPost = cache(async (slug: string) => {
+  const post = await prisma.blogPost.findUnique({ where: { slug } });
+  return post?.published ? post : null;
+});
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await prisma.blogPost.findUnique({ where: { slug } });
+  const post = await getPublishedPost(slug);
   if (!post) return { title: "Post Not Found" };
+
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const description = post.metaDescription || post.excerpt;
+
   return {
-    title: `${post.title} | ToolWire AI Blog`,
-    description: post.excerpt,
+    title: post.metaTitle || post.title,
+    description,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: post.coverImage ? [post.coverImage] : [],
+      type: "article",
+      url: canonicalUrl,
+      title: post.metaTitle || post.title,
+      description,
+      ...(post.coverImage && { images: [post.coverImage] }),
+      ...(post.publishedAt && {
+        publishedTime: new Date(post.publishedAt).toISOString(),
+      }),
     },
   };
 }
@@ -46,9 +64,9 @@ function renderContent(content: string) {
     }
     if (trimmed.startsWith("#")) {
       return (
-        <h1 key={idx} className="text-3xl font-extrabold text-foreground mt-10 mb-6">
+        <h2 key={idx} className="text-2xl font-bold text-foreground mt-8 mb-4">
           {trimmed.replace(/^#\s*/, "")}
-        </h1>
+        </h2>
       );
     }
     if (trimmed.startsWith("-") || trimmed.startsWith("*")) {
@@ -80,11 +98,18 @@ function renderContent(content: string) {
 
 export default async function BlogPostDetailPage({ params }: Props) {
   const { slug } = await params;
-  const post = await prisma.blogPost.findUnique({
-    where: { slug },
-  });
+  const post = await getPublishedPost(slug);
 
   if (!post) notFound();
+
+  const articleJsonLd = generateBlogPostingJsonLd({
+    title: post.title,
+    excerpt: post.excerpt,
+    coverImage: post.coverImage,
+    publishedAt: post.publishedAt,
+    author: post.author,
+    slug: post.slug,
+  });
 
   // Increment viewCount asynchronously
   prisma.blogPost.update({
@@ -103,6 +128,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen pb-20">
+      <JsonLd data={articleJsonLd} />
       {/* Cover Header */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link
@@ -132,7 +158,15 @@ export default async function BlogPostDetailPage({ params }: Props) {
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4" />
-              <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ""}</span>
+              {post.publishedAt && (
+                <time dateTime={new Date(post.publishedAt).toISOString()}>
+                  {new Intl.DateTimeFormat("en", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  }).format(new Date(post.publishedAt))}
+                </time>
+              )}
             </div>
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />

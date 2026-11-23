@@ -6,7 +6,7 @@ export const runtime = "edge";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const title = searchParams.get("title") || "ToolWire AI";
-  const description = searchParams.get("description") || "Find the Perfect AI Tool in Seconds";
+  const description = searchParams.get("description") || "Find the right AI tool for the work, learning, and ideas in front of you.";
 
   return new ImageResponse(
     (
@@ -92,22 +92,6 @@ export async function GET(req: NextRequest) {
           {description}
         </div>
 
-        {/* Stats bar */}
-        <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-          {["500+ AI Tools", "30+ Categories", "10K+ Reviews"].map((stat) => (
-            <div key={stat} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #6366f1, #06b6d4)",
-                }}
-              />
-              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>{stat}</span>
-            </div>
-          ))}
-        </div>
       </div>
     ),
     {

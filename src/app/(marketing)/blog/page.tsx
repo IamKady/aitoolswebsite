@@ -1,17 +1,39 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import prisma from "@/lib/prisma";
-import { ArrowRight, BookOpen, Clock, Calendar } from "lucide-react";
-import { timeAgo } from "@/lib/utils";
+import { ArrowRight, BookOpen, Clock } from "lucide-react";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AI Blog, News, Tutorials & Reviews | ToolWire AI",
-  description: "Read the latest AI updates, step-by-step tool tutorials, deep comparisons, and weekly roundups of AI technology.",
+  title: "AI Guides, Tool Reviews & Tutorials",
+  description:
+    "Explore practical AI guides, tool reviews, tutorials, and comparisons to help you choose and use AI tools with confidence.",
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+  },
+};
+
+const dateFormatter = new Intl.DateTimeFormat("en", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
+type BlogPostListItem = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  coverImage: string | null;
+  author: string;
+  publishedAt: Date | null;
+  readingTime: number | null;
 };
 
 export default async function BlogPage() {
-  const posts = await prisma.blogPost.findMany({
+  const posts: BlogPostListItem[] = await prisma.blogPost.findMany({
     where: { published: true },
     orderBy: { publishedAt: "desc" },
   });
@@ -43,11 +65,11 @@ export default async function BlogPage() {
             <BookOpen className="w-3.5 h-3.5" />
             Insights & Guides
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-            The <span className="gradient-text">ToolWire AI Blog</span>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl text-balance">
+          AI guides, reviews &amp; tutorials
           </h1>
           <p className="mt-4 text-base text-muted-foreground max-w-xl mx-auto">
-            Stay up to date with deep tool reviews, software comparisons, guidelines, and industry trends.
+          Find practical explainers, hands-on comparisons, and ideas for using AI tools in work, study, and everyday life.
           </p>
         </div>
       </div>
@@ -56,7 +78,7 @@ export default async function BlogPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {posts.map((post: any) => (
+            {posts.map((post) => (
               <article
                 key={post.id}
                 className="group relative flex flex-col justify-between rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-xl transition-all duration-300"
@@ -67,8 +89,9 @@ export default async function BlogPage() {
                     <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-muted">
                       <Image
                         src={post.coverImage}
-                        alt={post.title}
+                        alt=""
                         fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -105,7 +128,9 @@ export default async function BlogPage() {
                     <div>
                       <p className="text-xs font-bold text-foreground">{post.author}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ""}
+                        {post.publishedAt
+                          ? dateFormatter.format(new Date(post.publishedAt))
+                          : ""}
                       </p>
                     </div>
                   </div>
@@ -113,7 +138,7 @@ export default async function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                   >
-                    Read More
+                    Read article
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
