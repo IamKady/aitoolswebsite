@@ -192,6 +192,12 @@ const createMockModel = (modelName: string) => {
       
       if (args.where) {
         list = list.filter((item: any) => {
+          if (args.where.category?.slug) {
+            const matchedCategory = mockDb.categories.find(
+              (category) => category.slug === args.where.category.slug
+            );
+            if (item.categoryId !== matchedCategory?.id) return false;
+          }
           if (args.where.categoryId && item.categoryId !== args.where.categoryId) return false;
           if (args.where.pricing && item.pricing !== args.where.pricing) return false;
           return true;

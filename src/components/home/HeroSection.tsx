@@ -15,6 +15,10 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  TOOL_PRICING_OPTIONS,
+  type ToolPricingFilter,
+} from "@/lib/tool-filters";
 
 const SUGGESTED_SEARCHES = [
   "AI tools for students",
@@ -52,6 +56,8 @@ const TASK_SHORTCUTS = [
 export function HeroSection() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [selectedTask, setSelectedTask] = useState(TASK_SHORTCUTS[0].slug);
+  const [selectedPricing, setSelectedPricing] = useState<ToolPricingFilter>("all");
   const [suggestions, setSuggestions] = useState<{ tools: { name: string; slug: string; logo: string | null }[]; categories: { name: string; slug: string }[] }>({ tools: [], categories: [] });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionError, setSuggestionError] = useState(false);
@@ -68,6 +74,13 @@ export function HeroSection() {
     if (query.trim()) {
       router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     }
+  };
+
+  const handleFindTools = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const params = new URLSearchParams({ category: selectedTask });
+    if (selectedPricing !== "all") params.set("pricing", selectedPricing);
+    router.push(`/tools?${params.toString()}`);
   };
 
   const handleQueryChange = (value: string) => {
@@ -298,27 +311,75 @@ export function HeroSection() {
               </span>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              {TASK_SHORTCUTS.map((task) => (
-                <Link
-                  key={task.slug}
-                  href={`/categories/${task.slug}`}
-                  className="group flex min-h-28 flex-col justify-between rounded-2xl border border-border/80 bg-background/70 p-4 transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${task.tone}`}>
-                    <task.icon aria-hidden="true" className="h-5 w-5" />
-                  </span>
-                  <span className="mt-4 flex items-center justify-between gap-2 text-sm font-semibold text-foreground">
-                    {task.label}
-                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-                  </span>
-                </Link>
-              ))}
-            </div>
+            <form onSubmit={handleFindTools} className="mt-6">
+              <fieldset>
+                <legend className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Choose a task
+                </legend>
+                <div className="grid grid-cols-2 gap-3">
+                  {TASK_SHORTCUTS.map((task) => (
+                    <button
+                      type="button"
+                      key={task.slug}
+                      aria-pressed={selectedTask === task.slug}
+                      onClick={() => setSelectedTask(task.slug)}
+                      className={`group flex min-h-24 flex-col justify-between rounded-2xl border p-4 text-left transition-[transform,border-color,background-color,box-shadow] hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                        selectedTask === task.slug
+                          ? "border-primary/50 bg-primary/[0.07] shadow-md shadow-primary/10"
+                          : "border-border/80 bg-background/70 hover:border-primary/40 hover:shadow-lg"
+                      }`}
+                    >
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${task.tone}`}>
+                        <task.icon aria-hidden="true" className="h-5 w-5" />
+                      </span>
+                      <span className="mt-4 flex items-center justify-between gap-2 text-sm font-semibold text-foreground">
+                        {task.label}
+                        <span
+                          className={`h-2 w-2 shrink-0 rounded-full ${
+                            selectedTask === task.slug ? "bg-primary" : "bg-transparent"
+                          }`}
+                        />
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset className="mt-5">
+                <legend className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Pricing preference
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  {TOOL_PRICING_OPTIONS.map((preference) => (
+                    <button
+                      key={preference.value}
+                      type="button"
+                      aria-pressed={selectedPricing === preference.value}
+                      onClick={() => setSelectedPricing(preference.value)}
+                      className={`min-h-10 rounded-full border px-3.5 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                        selectedPricing === preference.value
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border bg-background/70 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                      }`}
+                    >
+                      {preference.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <button
+                type="submit"
+                className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Show matching tools
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </button>
+            </form>
 
             <div className="mt-4 flex items-start gap-3 rounded-2xl bg-muted/70 p-4">
               <span aria-hidden="true" className="mt-0.5 text-primary">
-                <ArrowRight className="h-4 w-4" />
+                <ArrowUpRight className="h-4 w-4" />
               </span>
               <p className="text-sm leading-6 text-muted-foreground">
                 Compare features, pricing, and alternatives before you decide.
