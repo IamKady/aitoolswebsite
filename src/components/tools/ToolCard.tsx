@@ -128,34 +128,18 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
           className
         )}
       >
-          {/* Sponsored / Featured badges */}
-          {(tool.sponsored || tool.featured) && (
-            <div className="absolute top-3 left-3 z-10 flex gap-1.5">
-              {tool.sponsored && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-500/30 font-medium">
-                  Sponsored
-                </span>
-              )}
-              {tool.featured && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30 font-medium flex items-center gap-0.5">
-                  <Zap className="w-2.5 h-2.5" /> Featured
-                </span>
-              )}
-            </div>
-          )}
-
           {/* Action buttons (appear on hover) */}
           <div className="absolute top-3 right-3 z-10 flex gap-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
             <button
               type="button"
               onClick={handleBookmark}
-              className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
+              className="flex min-h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-background/90 transition-colors hover:border-primary/50 hover:bg-muted"
               aria-label={isBookmarked ? `Remove ${tool.name} from saved tools` : `Save ${tool.name}`}
               aria-pressed={isBookmarked}
             >
               <Bookmark
                 aria-hidden="true"
-                className={cn("w-3.5 h-3.5", isBookmarked ? "fill-primary text-primary" : "text-muted-foreground")}
+                className={cn("h-4 w-4", isBookmarked ? "fill-primary text-primary" : "text-muted-foreground")}
               />
             </button>
             <a
@@ -163,39 +147,55 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
               target="_blank"
               rel={websiteRel}
               onClick={(e) => e.stopPropagation()}
-              className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 hover:bg-white/10 transition-colors"
+              className="flex min-h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-background/90 transition-colors hover:border-primary/50 hover:bg-muted"
               aria-label={`Visit ${tool.name} website`}
               title={`Visit ${tool.name} website`}
             >
-              <ExternalLink aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
+              <ExternalLink aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
             </a>
             <Link
               href={`/compare?a=${tool.slug}`}
               onClick={(e) => e.stopPropagation()}
-              className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
+              className="flex min-h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-background/90 transition-colors hover:border-primary/50 hover:bg-muted"
               aria-label={`Compare ${tool.name}`}
             >
-              <GitCompare aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
+              <GitCompare aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
             </Link>
             <button
               type="button"
               onClick={handleShare}
-              className="p-1.5 rounded-lg glass border border-white/20 hover:border-primary/50 transition-colors"
+              className="flex min-h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-background/90 transition-colors hover:border-primary/50 hover:bg-muted"
               aria-label={`Share ${tool.name}`}
             >
-              <Share2 aria-hidden="true" className="w-3.5 h-3.5 text-muted-foreground" />
+              <Share2 aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
           <span className="sr-only" role="status" aria-live="polite">{shareStatus}</span>
 
           {/* Card body */}
           <div className="p-5 flex flex-col flex-1">
+            {(tool.sponsored || tool.featured) && (
+              <div className="mb-4 flex min-h-7 flex-wrap items-center gap-1.5 pr-36">
+                {tool.sponsored && (
+                  <span className="inline-flex items-center rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2.5 py-1 text-[10px] font-semibold text-yellow-700 dark:text-yellow-300">
+                    Sponsored
+                  </span>
+                )}
+                {tool.featured && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+                    <Zap aria-hidden="true" className="h-3 w-3" />
+                    Featured
+                  </span>
+                )}
+              </div>
+            )}
+
             {/* Logo & name row */}
-            <div className="flex items-start gap-3 mb-3">
+            <div className="mb-4 flex items-center gap-3">
               <ToolLogo tool={tool} size="lg" />
-              <div className="flex-1 min-w-0 pt-0.5">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors truncate">
+                  <h3 className="truncate text-base font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">
                     <Link href={`/tools/${tool.slug}`} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                       <span className="absolute inset-0" aria-hidden="true" />
                       {tool.name}
@@ -205,24 +205,24 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
                     <CheckCircle2 aria-label="Verified listing" className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
                   {tool.category.name}
                 </p>
               </div>
             </div>
 
             {/* Tagline */}
-            <p className="text-xs text-muted-foreground leading-relaxed mb-4 line-clamp-2 flex-1">
+            <p className="mb-5 line-clamp-2 flex-1 text-sm leading-relaxed text-muted-foreground">
               {truncate(tool.tagline, 90)}
             </p>
 
             {/* Tags */}
             {tool.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-4">
+              <div className="mb-4 flex flex-wrap gap-1.5">
                 {tool.tags.slice(0, 3).map(({ tag }) => (
                   <span
                     key={tag.id}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-accent text-muted-foreground"
+                    className="rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground"
                   >
                     {tag.name}
                   </span>
@@ -231,14 +231,14 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
             )}
 
             {/* Footer row */}
-            <div className="flex items-center justify-between pt-3 border-t border-border">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-3 border-t border-border pt-4">
+              <div className="flex flex-wrap items-center gap-2">
                 {/* Pricing badge */}
-                <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium", pricing.className)}>
+                <span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold", pricing.className)}>
                   {pricing.label}
                 </span>
                 {tool.hasFreeTrial && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
                     Free Trial
                   </span>
                 )}
@@ -246,12 +246,12 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
               {/* Rating */}
               {tool.reviewCount > 0 && tool.rating > 0 && (
                 <div
-                  className="flex items-center gap-1"
+                  className="flex shrink-0 items-center gap-1.5"
                   role="img"
                   aria-label={`${tool.rating.toFixed(1)} out of 5 from ${tool.reviewCount} reviews`}
                 >
-                  <Star aria-hidden="true" className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs font-medium text-foreground">
+                  <Star aria-hidden="true" className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  <span className="text-sm font-semibold text-foreground">
                     {tool.rating.toFixed(1)}
                   </span>
                   <span className="text-xs text-muted-foreground">
@@ -269,9 +269,9 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
               target="_blank"
               rel={websiteRel}
               onClick={(e) => e.stopPropagation()}
-              className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl border border-primary/30 text-primary text-sm font-medium hover:bg-primary hover:text-white hover:border-primary transition-all duration-200"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-primary/30 py-2 text-sm font-semibold text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink aria-hidden="true" className="h-4 w-4" />
               Visit Website
             </a>
           </div>
@@ -282,22 +282,20 @@ export function ToolCard({ tool, className, variant = "default" }: ToolCardProps
 
 // Tool logo with fallback
 function ToolLogo({ tool, size }: { tool: ToolCardData; size: "sm" | "lg" }) {
-  const sizeClass = size === "lg" ? "w-10 h-10" : "w-8 h-8";
-  const textClass = size === "lg" ? "text-base font-extrabold" : "text-xs font-bold";
+  const sizeClass = size === "lg" ? "h-12 w-12" : "h-8 w-8";
+  const textClass = size === "lg" ? "text-sm font-bold tracking-wide" : "text-xs font-bold";
   const categoryColor = tool.category.color || "#6366f1";
   const [imgError, setImgError] = useState(false);
-
-  // Get first letter of tool name
-  const firstLetter = tool.name.charAt(0).toUpperCase();
+  const monogram = tool.name.trim().slice(0, 2).toUpperCase() || "?";
 
   if (tool.logo && !imgError) {
     return (
-      <div className={cn("rounded-xl overflow-hidden flex-shrink-0 border border-border bg-white flex items-center justify-center", sizeClass)}>
+      <div className={cn("flex flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white", sizeClass)}>
         <Image
           src={tool.logo}
           alt={`${tool.name} logo`}
-          width={size === "lg" ? 40 : 32}
-          height={size === "lg" ? 40 : 32}
+          width={size === "lg" ? 48 : 32}
+          height={size === "lg" ? 48 : 32}
           className="w-full h-full object-contain"
           onError={() => {
             setImgError(true);
@@ -310,7 +308,7 @@ function ToolLogo({ tool, size }: { tool: ToolCardData; size: "sm" | "lg" }) {
   return (
     <div
       className={cn(
-        "rounded-xl flex items-center justify-center flex-shrink-0 text-white shadow-sm border border-white/10 select-none",
+        "flex flex-shrink-0 select-none items-center justify-center rounded-xl border border-white/10 text-white shadow-sm",
         sizeClass,
         textClass
       )}
@@ -318,7 +316,7 @@ function ToolLogo({ tool, size }: { tool: ToolCardData; size: "sm" | "lg" }) {
         background: `linear-gradient(135deg, ${categoryColor} 0%, ${categoryColor}bb 100%)`,
       }}
     >
-      {firstLetter}
+      {monogram}
     </div>
   );
 }
