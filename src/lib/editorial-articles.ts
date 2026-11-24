@@ -29,8 +29,133 @@ export type EditorialArticle = {
 };
 
 const publishedAt = new Date("2026-11-23T12:00:00Z");
+const latestPublishedAt = new Date("2026-11-24T12:00:00Z");
 
 export const EDITORIAL_ARTICLES: EditorialArticle[] = [
+  {
+    id: "editorial-google-personal-intelligence-search",
+    title: "Google is connecting personal apps to AI Search. What should you weigh first?",
+    slug: "google-personal-intelligence-ai-search-apps",
+    excerpt:
+      "Google’s new AI Mode connections can use context from Wallet, Drive, and Gemini. Here’s what is rolling out and what to consider before opting in.",
+    content: `Google announced a new step toward personalized AI search on November 23, 2026: people can connect more of their Google apps to Personal Intelligence in AI Mode. Google says Wallet is starting to roll out, while Drive and Gemini app connections are expected in the coming weeks. Gmail, Calendar, and Photos were already available as connected context.
+
+The change is worth understanding because it moves AI search beyond the words in a query. With permission, an answer may also draw on information from the accounts and apps a person connects.
+
+## What Google says is changing
+
+Google describes examples such as using Wallet information to review spending or card benefits, and using Drive documents to help prepare for a project. The company says Wallet access in AI Mode is read-only: it cannot move, manage, or invest money.
+
+Google says users choose whether to connect each app and can turn connections off later in Search Personalization under Connected Apps. The company also says it plans to show which personal context was used for a response through a Personalization control.
+
+These are Google’s descriptions of its product and controls. As with any new feature, it is sensible to check the settings available in your own account rather than assume a rollout or control is identical for everyone.
+
+## The tradeoff: relevance versus data access
+
+Personal context can reduce repetition. A search assistant that can reference a document or a saved preference may produce a more relevant starting point. But better context also means more sensitive information is in scope. A useful answer can still misunderstand a transaction, use an outdated document, or overlook an important detail.
+
+That matters particularly when the answer concerns money, travel, health, or work. An AI summary should not replace checking the original account, document, or provider terms.
+
+## Before connecting an app
+
+- Review which apps are connected and remove access you no longer need.
+- Start with a low-risk task and check whether the response uses the context you expected.
+- Verify important claims against the original source, especially financial details.
+- Check Search Personalization settings if you share a device or account.
+- Leave an app disconnected if the available permissions or data handling are not clear to you.
+
+Personalized search can be convenient, but it is a choice about both usefulness and access. The safest starting point is to connect only what a task genuinely needs, then review the result before acting on it.`,
+    coverImage: null,
+    category: "news",
+    tags: ["Google Search", "AI Mode", "privacy", "personalization"],
+    author: "ToolWire Editorial",
+    authorAvatar: null,
+    metaTitle: "Google Personal Intelligence in AI Search: What to Know",
+    metaDescription:
+      "Google is adding Wallet, Drive, and Gemini app context to AI Mode. Learn what is rolling out and what to review before connecting personal apps.",
+    published: true,
+    featured: true,
+    viewCount: 0,
+    readingTime: 4,
+    publishedAt: latestPublishedAt,
+    createdAt: latestPublishedAt,
+    updatedAt: latestPublishedAt,
+    sources: [
+      {
+        title: "A more tailored Google Search that’s uniquely yours",
+        publisher: "Google Search Product Blog",
+        url: "https://blog.google/products-and-platforms/products/search/google-search-personal-intelligence-apps/",
+        publishedAt: "November 23, 2026",
+      },
+    ],
+  },
+  {
+    id: "editorial-meta-muse-uk-privacy-agent",
+    title: "Meta Muse in the UK: what to know before letting an AI agent use your apps",
+    slug: "meta-muse-uk-ai-agent-privacy-shopping",
+    excerpt:
+      "Meta’s Muse can use connected apps to help with shopping and everyday tasks. Here’s how its permissions work, what the company says about data, and what UK regulators are watching.",
+    content: `    Meta announced Muse’s UK availability for adults on November 23, 2026. Unlike a typical chatbot exchange, Muse is presented as an agent that can work across connected apps for tasks such as planning, comparing products, or preparing messages.
+
+That makes permissions and approvals central to the product. A useful assistant may need context from email, calendars, or retailer apps—but it may also be asked to take actions that affect a person outside the chat.
+
+## What Muse can do, according to Meta
+
+Meta says people choose which apps Muse can use and can review its activity and memories. The company says a user can allow email reading without allowing email sending. It also says purchases and sending emails require approval each time, while permissions for some other actions can be configured.
+
+Meta says its credential system keeps passwords from being visible to the AI model, and that conversations and saved information are not shared with its advertising systems. The company also says its setting for using interactions to improve AI starts on, but can be turned off in Data Controls. These are Meta’s own descriptions; users should check the current terms and settings in the app.
+
+## Why the UK rollout is drawing attention
+
+The Guardian and The Independent report that the UK Information Commissioner’s Office and Competition and Markets Authority engaged with Meta before the launch. The Guardian reported that the ICO agreed a voluntary monitoring and reporting arrangement, while the CMA said changes had been made to Meta’s terms and that it would monitor how the product works in practice.
+
+Those details do not mean regulators have approved every use of Muse. They show that consumer protection and personal-data handling are part of the rollout discussion, alongside convenience.
+
+## A cautious way to try an AI agent
+
+- Begin with a task that does not involve spending money or sending messages.
+- Grant the narrowest app permissions available; use read-only access when it is enough.
+- Keep approval required for purchases and messages, and review each proposed action.
+- Check what the agent remembers and whether interactions can be used to improve the service.
+- Disconnect apps or revoke permissions you no longer want to share.
+
+AI agents can reduce routine work, but users remain responsible for checking what an agent is about to do. Treat connected-app access like a permission you would give to a human assistant: limited to the task, visible, and easy to revoke.`,
+    coverImage: null,
+    category: "news",
+    tags: ["Meta Muse", "AI agents", "privacy", "UK"],
+    author: "ToolWire Editorial",
+    authorAvatar: null,
+    metaTitle: "Meta Muse UK Launch: AI Agent Permissions and Privacy",
+    metaDescription:
+      "Meta Muse can act across connected apps in the UK. Learn what Meta says about permissions and data, and why consumer regulators are monitoring the launch.",
+    published: true,
+    featured: true,
+    viewCount: 0,
+    readingTime: 5,
+    publishedAt: latestPublishedAt,
+    createdAt: latestPublishedAt,
+    updatedAt: latestPublishedAt,
+    sources: [
+      {
+        title: "Muse Now Available in the UK: Muse Does the Work, You Stay in Control",
+        publisher: "Meta Newsroom",
+        url: "https://about.fb.com/news/2026/11/muse-now-available-in-the-uk-muse-does-the-work-you-stay-in-control/",
+        publishedAt: "November 23, 2026",
+      },
+      {
+        title: "Meta launches Muse in UK – the AI agent that can do your Christmas shopping",
+        publisher: "The Guardian",
+        url: "https://www.theguardian.com/technology/2026/nov/24/meta-launches-muse-uk-ai-agent-do-christmas-shopping",
+        publishedAt: "November 24, 2026",
+      },
+      {
+        title: "Regulators issue warnings after UK brands sign up to Meta’s AI assistant",
+        publisher: "The Independent",
+        url: "https://www.independent.co.uk/tech/meta-muse-competition-and-markets-authority-spencer-facebook-b3090462.html",
+        publishedAt: "November 24, 2026",
+      },
+    ],
+  },
   {
     id: "editorial-ai-funding-india-2026",
     title: "India’s AI funding reached $1.6B. The concentration matters as much as the total.",
